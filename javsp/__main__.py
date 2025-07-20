@@ -332,6 +332,7 @@ def generate_names(movie: Movie):
                 filebasename = os.path.basename(movie.files[0])
                 ext = os.path.splitext(filebasename)[1]
                 basename = filebasename.replace(ext, '')
+                copyd['basename'] = basename
             long_path = os.path.join(save_dir, basename+longest_ext)
             remaining = get_remaining_path_len(os.path.abspath(long_path))
             if remaining > 0:
