@@ -11,16 +11,19 @@ scanner:
     - 'Carib(beancom)?'
     - '[^a-z\d](f?hd|lt)[^a-z\d]'
   # 整理哪个文件夹下的影片？（此项留空时将在运行时询问）
-  input_directory: null
+  input_directory: 'e:\MovieLibrary\Strm-CD2\JAV\'
   # 哪些后缀的文件应当视为影片？
-  filename_extensions: [.3gp, .avi, .f4v, .flv, .iso, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .rm, .rmvb, .ts, .vob, .webm, .wmv, .strm, .mpg]
+  filename_extensions: [.strm, .3gp, .avi, .f4v, .flv, .iso, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .rm, .rmvb, .ts, .vob, .webm, .wmv, .strm, .mpg]
   # 扫描影片文件时忽略指定的文件夹
   ignored_folder_name_pattern: ['^\.', '^#recycle$', '^#整理完成$', '^#不要扫描$']
   # 匹配番号时忽略小于指定大小的文件
   # 格式要求：https://docs.pydantic.dev/2.0/usage/types/bytesize/
-  minimum_size: 232MiB
-  skip_nfo_dir: yes
-  manual: yes
+  minimum_size: 1B
+  skip_nfo_dir: no
+  # 仅检查是否存在与视频同名的nfo文件，如果nfo命名规则设置成别的，此选项无效
+  # 并且skip_scrapped与skip_nfo_dir互相冲突
+  skip_scrapped: yes
+  manual: no
 ################################
 network:
   # 设置代理服务器地址，支持 http, socks5/socks5h 代理，比如'http://127.0.0.1:1080'
@@ -29,9 +32,9 @@ network:
   # 各个站点的免代理地址。地址失效时软件会自动尝试获取新地址，你也可以手动设置
   proxy_free:
     avsox: 'https://avsox.click'
-    javbus: 'https://www.seedmm.help'
-    javdb: 'https://javdb368.com'
-    javlib: 'https://www.y78k.com'
+    javbus: 'https://www.javbus.com'
+    javdb: 'https://javdb458.com'
+    javlib: 'https://www.x92g.com'
   # 网络问题导致抓取数据失败时的重试次数，通常3次就差不多了
   retry: 3
   # https://en.wikipedia.org/wiki/ISO_8601#Durations
@@ -42,7 +45,13 @@ crawler:
   # 要使用的爬虫列表（汇总数据时从前到后进行）
   # airav avsox avwiki fanza fc2 fc2fan javbus javdb javlib javmenu jav321 mgstage prestige arzon arzon_iv
   selection:
-    normal: [airav, avsox, javbus, javdb, javlib, jav321, mgstage, prestige]
+    # normal: [airav,avsox, javdb, javbus,javlib, jav321, mgstage, prestige]
+    # 1-airav：网站能访问，但api无响应
+    # 2-avsox：无码站
+    # 3-javdb：主站封日本ip，不可以直连。javdb458.com可以直连，若失效数字+1即可。但图片有水印，不采用
+    # 4-javlib: 官网和反代都有cf墙，爬不了
+    # normal: [javbus, jav321, mgstage, prestige]
+    normal: [javbus]
     fc2: [fc2, avsox, javdb, javmenu, fc2ppvdb]
     cid: [fanza]
     getchu: [dl_getchu]
@@ -69,12 +78,12 @@ crawler:
 # https://github.com/Yuukiy/JavSP/wiki/NamingRule-%7C-%E5%91%BD%E5%90%8D%E8%A7%84%E5%88%99
 summarizer:
   # 整理时是否移动文件: true-移动所有文件到新文件夹; false-数据保存到同级文件夹，不移动文件
-  move_files: true
+  move_files: false
 
   # 路径相关的选项
   path: 
     # 存放影片、封面等文件的文件夹路径
-    output_folder_pattern: '#整理完成/{actress}/[{num}] {title}'
+    output_folder_pattern: 'e:/MovieLibrary/Strm-CD2/JAV/#整理完成/{actress}'
     # 影片、封面、nfo信息文件等的文件名将基于下面的规则来创建
     basename_pattern: '{num}'
     # 允许的最长文件路径（路径过长时将据此自动截短标题）
@@ -103,19 +112,19 @@ summarizer:
   # NFO文件生成相关的选项
   nfo:
     # nfo文件的名称
-    basename_pattern: "movie"
+    basename_pattern: "{basename}"
     # nfo文件中的影片标题（即媒体管理工具中显示的标题）
     title_pattern: '{num} {title}'
     # 要添加到自定义分类的字段，空列表表示不添加
-    custom_genres_fields: ['{genre}', '{censor}']
+    custom_genres_fields: [ '{censor}']
     # 要添加到自定义标签的字段，空列表表示不添加
-    custom_tags_fields: ['{genre}', '{censor}']
-  # 依次设置 已知无码/已知有码/不确定 这三种情况下 {censor} 对应的文本(可以利用此变量将有码/无码影片整理到不同文件夹)
-  censor_options_representation: ['无码', '有码', '打码情况未知']
+    custom_tags_fields: ['{censor}']
+  # 依次设置 已知有码/已知无码/不确定（代码里没处理） 这三种情况下 {censor} 对应的文本(可以利用此变量将有码/无码影片整理到不同文件夹)
+  censor_options_representation: ['有码', '无码', '不确定']
 
   cover:
     # 封面文件的名称（不含拓展名），可以使用如`{title}`等字段
-    basename_pattern: "poster"
+    basename_pattern: "{basename}-poster"
     # 尽可能下载高清封面？（高清封面大小约 8-10 MiB，远大于普通封面，如果你的网络条件不佳，会降低整理速度）
     highres: true
     # 在封面图上添加水印（标签），例如“字幕”
@@ -139,11 +148,11 @@ summarizer:
 
   fanart:
     # 横版封面文件的名称（不含拓展名），可以使用如`{title}`等字段
-    basename_pattern: "fanart"
+    basename_pattern: "{basename}-fanart"
 
   extra_fanarts:
     # 是否下载剧照？
-    enabled: true
+    enabled: false
     # 间隔的两次封面爬取请求之间应该间隔多久
     scrap_interval: PT1.5S
 
@@ -193,6 +202,6 @@ other:
   # 是否在stdin/stdout进行交互
   interactive: true
   # 是否允许检查更新。如果允许，在有新版本时会显示提示信息和新版功能
-  check_update: true
+  check_update: false
   # 是否允许检查到新版本时自动下载
   auto_update: false
