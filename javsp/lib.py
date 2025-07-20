@@ -56,6 +56,8 @@ def detect_special_attr(filepath: str, avid: str = None) -> str:
     match = _PATTERN.search(base)
     if match:
         result += 'U'
+    elif '-DEMOSAIC' in base:
+        result += 'U'
     # 尝试匹配-C/-U/-UC后缀的影片
     postfix = base.split('-')[-1]
     if postfix in ('U', 'C', 'UC'):
