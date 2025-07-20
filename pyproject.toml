@@ -17,7 +17,7 @@ cloudscraper = "1.2.71"
 colorama = "0.4.4"
 pillow = "10.2.0"
 pretty-errors = "1.2.19"
-requests = "2.31.0"
+requests = ">=2.31.0"
 tqdm = "4.59.0"
 # https://stackoverflow.com/questions/446209/possible-values-from-sys-platform
 pywin32 = {version = "^306", markers = "sys_platform == 'win32'"}
