@@ -44,6 +44,7 @@ def _get_avsox_urls() -> list:
 
 
 def _get_javbus_urls() -> list:
+    # 已失效
     html = get_html('https://www.javbus.one/')
     text = html.text_content()
     urls = re.findall(r'防屏蔽地址：(https://(?:[\d\w][-\d\w]{1,61}[\d\w]\.){1,2}[a-z]{2,})', text, re.I | re.A)
@@ -60,6 +61,7 @@ def _get_javlib_urls() -> list:
 
 
 def _get_javdb_urls() -> list:
+    # 已失效
     html = get_html('https://jav524.app')
     js_links = html.xpath("//script[@src]/@src")
     for link in js_links:
