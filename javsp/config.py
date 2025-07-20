@@ -16,6 +16,7 @@ class Scanner(BaseConfig):
     ignored_folder_name_pattern: List[str]
     minimum_size: ByteSize
     skip_nfo_dir: bool
+    skip_scrapped: bool
     manual: bool
 
 class CrawlerID(str, Enum):
