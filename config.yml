@@ -50,8 +50,7 @@ crawler:
     # 2-avsox：无码站
     # 3-javdb：主站封日本ip，不可以直连。javdb458.com可以直连，若失效数字+1即可。但图片有水印，不采用
     # 4-javlib: 官网和反代都有cf墙，爬不了
-    # normal: [javbus, jav321, mgstage, prestige]
-    normal: [javbus]
+    normal: [javbus, javdb, jav321, mgstage, prestige]
     fc2: [fc2, avsox, javdb, javmenu, fc2ppvdb]
     cid: [fanza]
     getchu: [dl_getchu]
@@ -119,8 +118,8 @@ summarizer:
     custom_genres_fields: [ '{censor}']
     # 要添加到自定义标签的字段，空列表表示不添加
     custom_tags_fields: ['{censor}']
-  # 依次设置 已知有码/已知无码/不确定（代码里没处理） 这三种情况下 {censor} 对应的文本(可以利用此变量将有码/无码影片整理到不同文件夹)
-  censor_options_representation: ['有码', '无码', '不确定']
+  # 依次设置 已知有码/已知无码/破解（代码里没处理） 这三种情况下 {censor} 对应的文本(可以利用此变量将有码/无码影片整理到不同文件夹)
+  censor_options_representation: ['有码', '无码', '破解']
 
   cover:
     # 封面文件的名称（不含拓展名），可以使用如`{title}`等字段
@@ -128,7 +127,7 @@ summarizer:
     # 尽可能下载高清封面？（高清封面大小约 8-10 MiB，远大于普通封面，如果你的网络条件不佳，会降低整理速度）
     highres: true
     # 在封面图上添加水印（标签），例如“字幕”
-    add_label: false
+    add_label: true
     crop:
       # 要使用图像识别来裁剪的番号系列需要匹配的正则表达式
       on_id_pattern:

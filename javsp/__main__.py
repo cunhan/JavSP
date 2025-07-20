@@ -239,8 +239,8 @@ def info_summary(movie: Movie, all_info: Dict[str, MovieInfo]):
         final_info.genre = []
     if movie.hard_sub:
         final_info.genre.append('内嵌字幕')
-    if movie.uncensored:
-        final_info.genre.append('无码流出/破解')
+    if movie.decensored:
+        final_info.uncensored = 2
 
     # 女优别名固定
     if Cfg().crawler.normalize_actress_name and bool(final_info.actress_pics):
@@ -418,7 +418,7 @@ def process_poster(movie: Movie):
     if Cfg().summarizer.cover.add_label:
         if movie.hard_sub:
             fanart_cropped = add_label_to_poster(fanart_cropped, SUBTITLE_MARK_FILE, LabelPostion.BOTTOM_RIGHT)
-        if movie.uncensored:
+        if movie.decensored:
             fanart_cropped = add_label_to_poster(fanart_cropped, UNCENSORED_MARK_FILE, LabelPostion.BOTTOM_LEFT)
     fanart_cropped.save(movie.poster_file)
 

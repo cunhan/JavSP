@@ -105,7 +105,7 @@ class MovieInfo:
         d['rawtitle'] = info.ori_title or d['title']
         d['actress'] = ','.join(info.actress) if info.actress else Cfg().summarizer.default.actress
         d['score'] = info.score or '0'
-        d['censor'] = Cfg().summarizer.censor_options_representation[1 if info.uncensored else 0]
+        d['censor'] = Cfg().summarizer.censor_options_representation[int(info.uncensored)]
         d['serial'] = info.serial or Cfg().summarizer.default.series
         d['director'] = info.director or Cfg().summarizer.default.director
         d['producer'] = info.producer or Cfg().summarizer.default.producer
@@ -145,7 +145,7 @@ class Movie:
         return 'C' in self.attr_str
 
     @cached_property
-    def uncensored(self) -> bool:
+    def decensored(self) -> bool:
         """影片文件是无码流出/无码破解版本（很多种子并不严格区分这两种，故这里也不进一步细分）"""
         return 'U' in self.attr_str
 
