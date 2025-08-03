@@ -58,6 +58,9 @@ def detect_special_attr(filepath: str, avid: str = None) -> str:
         result += 'U'
     elif '-DEMOSAIC' in base:
         result += 'U'
+    # 暂时没有解码或者中文的4K片源，所以4K属性可以独立处理
+    elif '4K' in base:
+        return '4K'
     # 尝试匹配-C/-U/-UC后缀的影片
     postfix = base.split('-')[-1]
     if postfix in ('U', 'C', 'UC'):
