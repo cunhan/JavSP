@@ -143,6 +143,11 @@ class Movie:
     def hard_sub(self) -> bool:
         """影片文件带有内嵌字幕"""
         return 'C' in self.attr_str
+    
+    @cached_property
+    def uhd4k(self) -> bool:
+        """影片文件是否4K分辨率"""
+        return '4K' in self.attr_str
 
     @cached_property
     def decensored(self) -> bool:
@@ -151,7 +156,7 @@ class Movie:
 
     @cached_property
     def attr_str(self) -> str:
-        """用来标示影片文件的额外属性的字符串(空字符串/-U/-C/-UC)"""
+        """用来标示影片文件的额外属性的字符串(空字符串/-U/-C/-UC/-4K)"""
         # 暂不支持多分片的影片
         if len(self.files) != 1:
             return ''

@@ -374,6 +374,7 @@ def reviewMovieID(all_movies, root):
         relpaths = [os.path.relpath(i, root) for i in movie.files]
         print('\n'.join(['  '+i for i in relpaths]))
         s = prompt("回车确认当前番号，或直接输入更正后的番号（如'ABC-123'或'cid:sqte00300'）", "更正后的番号")
+        # s = None
         if not s:
             logger.info(f"已确认影片番号: {','.join(relpaths)}: {id}")
         else:
@@ -399,6 +400,7 @@ def reviewMovieID(all_movies, root):
 
 SUBTITLE_MARK_FILE = Image.open(os.path.abspath(resource_path('image/sub_mark.png')))
 UNCENSORED_MARK_FILE = Image.open(os.path.abspath(resource_path('image/unc_mark.png')))
+UHD4K_MARK_FILE = Image.open(os.path.abspath(resource_path('image/4k_mark.png')))
 
 def process_poster(movie: Movie):
     def should_use_ai_crop_match(label):
@@ -420,6 +422,8 @@ def process_poster(movie: Movie):
             fanart_cropped = add_label_to_poster(fanart_cropped, SUBTITLE_MARK_FILE, LabelPostion.BOTTOM_RIGHT)
         if movie.decensored:
             fanart_cropped = add_label_to_poster(fanart_cropped, UNCENSORED_MARK_FILE, LabelPostion.BOTTOM_LEFT)
+        if movie.uhd4k:
+            fanart_cropped = add_label_to_poster(fanart_cropped, UHD4K_MARK_FILE, LabelPostion.TOP_RIGHT)
     fanart_cropped.save(movie.poster_file)
 
 def RunNormalMode(all_movies):
@@ -448,7 +452,7 @@ def RunNormalMode(all_movies):
             # 依次执行各个步骤
             inner_bar.set_description(f'启动并发任务')
             all_info = parallel_crawler(movie, inner_bar)
-            msg = f'为其配置的{len(Cfg().crawler.selection[movie.data_src])}个抓取器均未获取到影片信息'
+            msg = f'为{filenames[0]}配置的{len(Cfg().crawler.selection[movie.data_src])}个抓取器均未获取到影片信息'
             check_step(all_info, msg)
 
             inner_bar.set_description('汇总数据')

@@ -50,6 +50,7 @@ crawler:
     # 2-avsox：无码站
     # 3-javdb：主站封日本ip，不可以直连。javdb458.com可以直连，若失效数字+1即可。但图片有水印，不采用
     # 4-javlib: 官网和反代都有cf墙，爬不了
+    # 5-njav: 是一个非官方的视频站，只能抓取基本信息，没有tag之类的内容。
     normal: [javbus, javdb, jav321, mgstage, prestige]
     fc2: [fc2, avsox, javdb, javmenu, fc2ppvdb]
     cid: [fanza]
