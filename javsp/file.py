@@ -92,6 +92,8 @@ def scan_movies(root: str) -> List[Movie]:
     # 检查是否有多部影片对应同一个番号
     non_slice_dup = {}  # avid: [abspath1, abspath2...]
     for avid, files in dic.copy().items():
+        #不处理分片
+        continue
         # 一一对应的直接略过
         if len(files) == 1:
             continue
@@ -145,17 +147,19 @@ def scan_movies(root: str) -> List[Movie]:
     # 转换数据的组织格式
     movies: List[Movie] = []
     for avid, files in dic.items():
-        src = guess_av_type(avid)
-        if src != 'cid':
-            mov = Movie(avid)
-        else:
-            mov = Movie(cid=avid)
-            # 即使初步识别为cid，也存储dvdid以供误识别时退回到dvdid模式进行抓取
-            mov.dvdid = get_id(files[0])
-        mov.files = files
-        mov.data_src = src
-        logger.debug(f'影片数据源类型: {avid}: {src}')
-        movies.append(mov)
+        for file in files:
+            # 对于同一个ID有4k和demosaic两个文件，分开2个Movie对象
+            src = guess_av_type(avid)
+            if src != 'cid':
+                mov = Movie(avid)
+            else:
+                mov = Movie(cid=avid)
+                # 即使初步识别为cid，也存储dvdid以供误识别时退回到dvdid模式进行抓取
+                mov.dvdid = get_id(file)            
+            mov.files = [file]
+            mov.data_src = src
+            logger.debug(f'影片数据源类型: {avid}: {src}')
+            movies.append(mov)
     return movies
 
 
