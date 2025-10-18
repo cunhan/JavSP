@@ -241,6 +241,8 @@ def info_summary(movie: Movie, all_info: Dict[str, MovieInfo]):
         final_info.genre.append('内嵌字幕')
     if movie.decensored:
         final_info.uncensored = 2
+    if final_info.uncensored is None:
+        final_info.uncensored = 0
 
     # 女优别名固定
     if Cfg().crawler.normalize_actress_name and bool(final_info.actress_pics):
@@ -447,6 +449,7 @@ def RunNormalMode(all_movies):
         try:
             # 初始化本次循环要整理影片任务
             filenames = [os.path.split(i)[1] for i in movie.files]
+            print(f'正在整理: {filenames[0]}')
             logger.info('正在整理: ' + ', '.join(filenames))
             inner_bar = tqdm(total=total_step, desc='步骤', ascii=True, leave=False)
             # 依次执行各个步骤
@@ -528,9 +531,9 @@ def RunNormalMode(all_movies):
             if movie != all_movies[-1] and Cfg().crawler.sleep_after_scraping > Duration(0):
                 time.sleep(Cfg().crawler.sleep_after_scraping.total_seconds())
             return_movies.append(movie)
-        # except Exception as e:
-        #     logger.debug(e, exc_info=True)
-        #     logger.error(f'整理失败: {e}')
+        except Exception as e:
+            logger.debug(e, exc_info=True)
+            logger.error(f'整理失败: {e}')
         finally:
             inner_bar.close()
     return return_movies
